@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PaveVision AI - Live Monitoring</title>
+
+    <!-- BOOTSTRAP -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- FONT AWESOME -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', sans-serif;
+        }
+
+        body{
+            background:#eef7fb;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar{
+
+            position:fixed;
+
+            left:0;
+
+            top:0;
+
+            width:260px;
+
+            height:100vh;
+
+            background:linear-gradient(
+                180deg,
+                #0f172a,
+                #1e293b
+            );
+
+            color:white;
+
+            padding:30px 20px;
+        }
+
+        .logo{
+
+            font-size:28px;
+
+            font-weight:700;
+
+            margin-bottom:50px;
+
+            color:#4fd1c5;
+        }
+
+        .menu{
+            list-style:none;
+            padding:0;
+        }
+
+        .menu li{
+            margin-bottom:25px;
+        }
+
+        .menu a{
+
+            text-decoration:none;
+
+            color:#d1d5db;
+
+            font-size:18px;
+
+            display:flex;
+
+            align-items:center;
+
+            gap:12px;
+
+            padding:12px 15px;
+
+            border-radius:12px;
+
+            transition:0.3s;
+        }
+
+        .menu a:hover{
+
+            background:#334155;
+
+            color:white;
+        }
+
+        .active{
+
+            background:#14b8a6;
+
+            color:white !important;
+        }
+
+        /* MAIN CONTENT */
+
+        .main-content{
+
+            margin-left:260px;
+
+            padding:35px;
+        }
+
+        .topbar{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            margin-bottom:30px;
+        }
+
+        .title h1{
+
+            font-size:40px;
+
+            font-weight:700;
+
+            color:#0f172a;
+        }
+
+        .title p{
+
+            color:#64748b;
+
+            margin-top:5px;
+        }
+
+        .logout-btn{
+
+            background:#ef4444;
+
+            color:white;
+
+            text-decoration:none;
+
+            padding:10px 18px;
+
+            border-radius:10px;
+        }
+
+        /* LIVE CAMERA */
+
+        .camera-card{
+
+            background:white;
+
+            padding:25px;
+
+            border-radius:20px;
+
+            box-shadow:0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .camera-feed{
+
+            width:100%;
+
+            border-radius:20px;
+
+            border:4px solid #0f172a;
+        }
+
+        /* STATUS BAR */
+
+        .status-bar{
+
+            display:flex;
+
+            gap:25px;
+
+            margin-top:20px;
+        }
+
+        .status-box{
+
+            background:white;
+
+            padding:20px;
+
+            border-radius:16px;
+
+            flex:1;
+
+            box-shadow:0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .status-box h4{
+
+            font-size:18px;
+
+            color:#64748b;
+        }
+
+        .status-box h2{
+
+            margin-top:10px;
+
+            color:#0f172a;
+
+            font-weight:700;
+        }
+
+        .live-dot{
+
+            width:12px;
+
+            height:12px;
+
+            border-radius:50%;
+
+            background:red;
+
+            display:inline-block;
+
+            margin-right:10px;
+
+            animation:blink 1s infinite;
+        }
+
+        @keyframes blink{
+
+            0%{
+                opacity:1;
+            }
+
+            50%{
+                opacity:0.2;
+            }
+
+            100%{
+                opacity:1;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            🚧 PaveVision AI
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="/">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="/uploads">
+                    <i class="fa-solid fa-upload"></i>
+                    Uploads
+                </a>
+            </li>
+
+            <li>
+                <a href="/analytics">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Analytics
+                </a>
+            </li>
+
+            <li>
+                <a href="/gps">
+                    <i class="fa-solid fa-location-dot"></i>
+                    GPS Reports
+                </a>
+            </li>
+
+            <li>
+                <a href="/history">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    History
+                </a>
+            </li>
+
+            <li>
+                <a href="/live" class="active">
+                    <i class="fa-solid fa-video"></i>
+                    Live Monitoring
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+
+    <div class="main-content">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div class="title">
+
+                <h1>
+                    Live AI Road Monitoring
+                </h1>
+
+                <p>
+                    Real-time pothole surveillance using YOLOv8
+                </p>
+
+            </div>
+
+            <div>
+
+                <span class="me-3 fw-bold">
+                    👋 {{ username }}
+                </span>
+
+                <a href="/logout" class="logout-btn">
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- LIVE FEED -->
+
+        <div class="camera-card">
+
+            <h3 class="mb-4">
+
+                <span class="live-dot"></span>
+
+                LIVE CAMERA FEED
+
+            </h3>
+
+            <img
+                src="{{ url_for('video_feed') }}"
+                class="camera-feed"
+            >
+
+        </div>
+
+        <!-- STATUS -->
+
+        <div class="status-bar">
+
+            <div class="status-box">
+
+                <h4>
+                    Detection Mode
+                </h4>
+
+                <h2>
+                    YOLOv8 Active
+                </h2>
+
+            </div>
+
+            <div class="status-box">
+
+                <h4>
+                    Monitoring Status
+                </h4>
+
+                <h2>
+                    Live Surveillance
+                </h2>
+
+            </div>
+
+            <div class="status-box">
+
+                <h4>
+                    System State
+                </h4>
+
+                <h2>
+                    Operational
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+

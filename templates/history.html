@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pothole Reports</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#edf3f7;
+padding:40px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:40px;
+}
+
+.topbar h1{
+font-size:50px;
+color:#0f172a;
+}
+
+.topbar p{
+font-size:20px;
+color:#64748b;
+margin-top:10px;
+}
+
+.back-btn{
+background:#0ea5e9;
+color:white;
+padding:14px 25px;
+border-radius:12px;
+text-decoration:none;
+font-size:18px;
+}
+
+.report-box{
+background:white;
+padding:30px;
+border-radius:24px;
+box-shadow:0 4px 20px rgba(0,0,0,0.08);
+}
+
+.table-title{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.table-title h2{
+font-size:32px;
+color:#0f172a;
+}
+
+.count-box{
+background:#0f172a;
+color:white;
+padding:12px 20px;
+border-radius:14px;
+font-size:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+overflow:hidden;
+border-radius:20px;
+}
+
+th{
+background:#0f172a;
+color:white;
+padding:20px;
+font-size:20px;
+}
+
+td{
+padding:20px;
+text-align:center;
+font-size:18px;
+border-bottom:1px solid #e2e8f0;
+}
+
+tr:hover{
+background:#f8fafc;
+}
+
+.badge{
+padding:10px 18px;
+border-radius:30px;
+color:white;
+font-weight:bold;
+font-size:16px;
+}
+
+.minor{
+background:#10b981;
+}
+
+.medium{
+background:#f59e0b;
+}
+
+.severe{
+background:#ef4444;
+}
+
+.status{
+background:#3b82f6;
+padding:8px 16px;
+border-radius:20px;
+color:white;
+font-size:15px;
+}
+
+.empty{
+text-align:center;
+padding:50px;
+font-size:24px;
+color:#64748b;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topbar">
+
+<div>
+
+<h1>Pothole Reports</h1>
+
+<p>
+Detailed severity-based pothole monitoring reports
+</p>
+
+</div>
+
+<a href="/" class="back-btn">
+← Back to Dashboard
+</a>
+
+</div>
+
+<div class="report-box">
+
+<div class="table-title">
+
+<h2>
+
+{% if severity_filter %}
+
+{{ severity_filter }} Pothole Report
+
+{% else %}
+
+All Detection Reports
+
+{% endif %}
+
+</h2>
+
+<div class="count-box">
+
+Total Records:
+{{ detections|length }}
+
+</div>
+
+</div>
+
+{% if detections %}
+
+<table>
+
+<tr>
+
+<th>ID</th>
+
+<th>Severity</th>
+
+<th>Latitude</th>
+
+<th>Longitude</th>
+
+<th>Status</th>
+
+<th>Detected Time</th>
+
+</tr>
+
+{% for d in detections %}
+
+<tr>
+
+<td>{{ d[0] }}</td>
+
+<td>
+
+{% if d[5] == 'Minor' %}
+
+<span class="badge minor">
+Minor
+</span>
+
+{% elif d[5] == 'Medium' %}
+
+<span class="badge medium">
+Medium
+</span>
+
+{% else %}
+
+<span class="badge severe">
+Severe
+</span>
+
+{% endif %}
+
+</td>
+
+<td>{{ d[3] }}</td>
+
+<td>{{ d[4] }}</td>
+
+<td>
+
+<span class="status">
+
+{{ d[6] }}
+
+</span>
+
+</td>
+
+<td>{{ d[7] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<div class="empty">
+
+No pothole records found.
+
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

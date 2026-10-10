@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        PaveVision AI - GPS Monitoring
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet/dist/leaflet.css"
+    />
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', sans-serif;
+        }
+
+        body{
+            background:#eef7fb;
+        }
+
+        .sidebar{
+
+            position:fixed;
+
+            left:0;
+
+            top:0;
+
+            width:260px;
+
+            height:100vh;
+
+            background:linear-gradient(
+                180deg,
+                #0f172a,
+                #1e293b
+            );
+
+            color:white;
+
+            padding:30px 20px;
+        }
+
+        .logo{
+
+            font-size:28px;
+
+            font-weight:700;
+
+            margin-bottom:50px;
+
+            color:#4fd1c5;
+        }
+
+        .menu{
+            list-style:none;
+            padding:0;
+        }
+
+        .menu li{
+            margin-bottom:25px;
+        }
+
+        .menu a{
+
+            text-decoration:none;
+
+            color:#d1d5db;
+
+            font-size:18px;
+
+            display:flex;
+
+            align-items:center;
+
+            gap:12px;
+
+            padding:12px 15px;
+
+            border-radius:12px;
+
+            transition:0.3s;
+        }
+
+        .menu a:hover{
+
+            background:#334155;
+
+            color:white;
+        }
+
+        .active{
+
+            background:#14b8a6;
+
+            color:white !important;
+        }
+
+        .main-content{
+
+            margin-left:260px;
+
+            padding:35px;
+        }
+
+        .topbar{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            margin-bottom:30px;
+        }
+
+        .title h1{
+
+            font-size:40px;
+
+            font-weight:700;
+
+            color:#0f172a;
+        }
+
+        .title p{
+
+            color:#64748b;
+
+            margin-top:5px;
+        }
+
+        .logout-btn{
+
+            background:#ef4444;
+
+            color:white;
+
+            text-decoration:none;
+
+            padding:10px 18px;
+
+            border-radius:10px;
+        }
+
+        .map-card{
+
+            background:white;
+
+            padding:25px;
+
+            border-radius:20px;
+
+            box-shadow:0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        #map{
+
+            height:700px;
+
+            width:100%;
+
+            border-radius:18px;
+        }
+
+        .legend{
+
+            display:flex;
+
+            gap:25px;
+
+            margin-top:20px;
+        }
+
+        .legend-item{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:10px;
+
+            font-weight:600;
+        }
+
+        .dot{
+
+            width:18px;
+
+            height:18px;
+
+            border-radius:50%;
+        }
+
+        .green{
+            background:#10b981;
+        }
+
+        .orange{
+            background:#f59e0b;
+        }
+
+        .red{
+            background:#ef4444;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <div class="logo">
+            🚧 PaveVision AI
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="/">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="/uploads">
+                    <i class="fa-solid fa-upload"></i>
+                    Uploads
+                </a>
+            </li>
+
+            <li>
+                <a href="/analytics">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Analytics
+                </a>
+            </li>
+
+            <li>
+                <a href="/gps" class="active">
+                    <i class="fa-solid fa-location-dot"></i>
+                    GPS Reports
+                </a>
+            </li>
+
+            <li>
+                <a href="/history">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Detection Logs
+                </a>
+            </li>
+
+            <li>
+                <a href="/live">
+                    <i class="fa-solid fa-video"></i>
+                    Live Monitoring
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="main-content">
+
+        <div class="topbar">
+
+            <div class="title">
+
+                <h1>
+
+                    {% if severity_filter == "Severe" %}
+
+                        🔴 Critical Risk Locations
+
+                    {% elif severity_filter == "Medium" %}
+
+                        🟠 Medium Risk Locations
+
+                    {% elif severity_filter == "Minor" %}
+
+                        🟢 Minor Risk Locations
+
+                    {% else %}
+
+                        GPS Monitoring Map
+
+                    {% endif %}
+
+                </h1>
+
+                <p>
+
+                    {% if severity_filter %}
+
+                        Showing {{ severity_filter }}
+                        pothole zones across monitored regions
+
+                    {% else %}
+
+                        Live pothole location tracking &
+                        smart infrastructure monitoring
+
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+            <div>
+
+                <span class="me-3 fw-bold">
+                    👋 {{ username }}
+                </span>
+
+                <a href="/logout"
+                   class="logout-btn">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="map-card">
+
+            <div id="map"></div>
+
+            <div class="legend">
+
+                <div class="legend-item">
+
+                    <div class="dot green"></div>
+
+                    Minor Severity
+
+                </div>
+
+                <div class="legend-item">
+
+                    <div class="dot orange"></div>
+
+                    Medium Severity
+
+                </div>
+
+                <div class="legend-item">
+
+                    <div class="dot red"></div>
+
+                    Severe Severity
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+
+        var map = L.map('map').setView(
+            [13.00, 77.60],
+            10
+        );
+
+        L.tileLayer(
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                attribution:
+                    '&copy; OpenStreetMap contributors'
+            }
+        ).addTo(map);
+
+        var detections = [
+
+            {% for row in detections %}
+
+            {
+                severity: "{{ row[6] }}",
+
+                latitude:
+                    {{ row[4] if row[4] else 0 }},
+
+                longitude:
+                    {{ row[5] if row[5] else 0 }},
+
+                status: "{{ row[7] }}",
+
+                confidence: "{{ row[2] }}"
+            },
+
+            {% endfor %}
+
+        ];
+
+        var markers = [];
+
+        detections.forEach(function(item){
+
+            if(
+                item.latitude === 0 ||
+                item.longitude === 0
+            ){
+                return;
+            }
+
+            let color = "";
+
+            if(item.severity === "Minor"){
+                color = "green";
+            }
+
+            else if(item.severity === "Medium"){
+                color = "orange";
+            }
+
+            else{
+                color = "red";
+            }
+
+            var marker = L.circleMarker(
+
+                [item.latitude, item.longitude],
+
+                {
+                    radius: 10,
+                    fillColor: color,
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.85
+                }
+
+            ).addTo(map);
+
+            marker.bindPopup(
+
+                `
+                <b>🚧 Pothole Detected</b>
+
+                <br><br>
+
+                <b>Severity:</b>
+                ${item.severity}
+
+                <br>
+
+                <b>Status:</b>
+                ${item.status}
+
+                <br>
+
+                <b>Confidence:</b>
+                ${(item.confidence * 100).toFixed(2)}%
+
+                <br>
+
+                <b>Latitude:</b>
+                ${item.latitude}
+
+                <br>
+
+                <b>Longitude:</b>
+                ${item.longitude}
+                `
+            );
+
+            markers.push(
+                [item.latitude, item.longitude]
+            );
+
+        });
+
+        if(markers.length > 0){
+
+            map.fitBounds(markers);
+
+        }
+
+    </script>
+
+</body>
+

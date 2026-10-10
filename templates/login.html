@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PaveVision AI - Login</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', sans-serif;
+        }
+
+        body{
+
+            height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            background:linear-gradient(
+                135deg,
+                #24c4c7,
+                #1d6fe3
+            );
+
+            overflow:hidden;
+        }
+
+        .container-box{
+
+            width:1100px;
+
+            height:650px;
+
+            background:white;
+
+            border-radius:25px;
+
+            overflow:hidden;
+
+            display:flex;
+
+            box-shadow:0 20px 50px rgba(0,0,0,0.25);
+        }
+
+        /* LEFT PANEL */
+
+        .left-panel{
+
+            width:55%;
+
+            position:relative;
+
+            overflow:hidden;
+
+            background:#eefdfd;
+        }
+
+        .left-image{
+
+            width:100%;
+
+            height:100%;
+
+            object-fit:cover;
+        }
+
+        /* RIGHT PANEL */
+
+        .right-panel{
+
+            width:45%;
+
+            background:white;
+
+            padding:55px;
+
+            position:relative;
+        }
+
+        .tabs{
+
+            display:flex;
+
+            justify-content:flex-end;
+
+            gap:35px;
+
+            margin-bottom:55px;
+        }
+
+        .tabs a{
+
+            text-decoration:none;
+
+            font-size:22px;
+
+            font-weight:600;
+
+            color:#666;
+        }
+
+        .active{
+
+            color:#15bfd4 !important;
+
+            border-bottom:3px solid #15bfd4;
+
+            padding-bottom:6px;
+        }
+
+        .welcome{
+
+            font-size:52px;
+
+            color:#0d6673;
+
+            margin-bottom:12px;
+
+            font-weight:700;
+        }
+
+        .subtitle{
+
+            color:#777;
+
+            font-size:20px;
+
+            margin-bottom:60px;
+        }
+
+        .form-control{
+
+            border:none;
+
+            border-bottom:3px solid #ddd;
+
+            border-radius:0;
+
+            box-shadow:none !important;
+
+            padding:14px 0;
+
+            font-size:20px;
+
+            margin-bottom:40px;
+        }
+
+        .login-btn{
+
+            width:100%;
+
+            background:#13bfd5;
+
+            color:white;
+
+            border:none;
+
+            padding:16px;
+
+            font-size:22px;
+
+            border-radius:10px;
+
+            transition:0.3s;
+        }
+
+        .login-btn:hover{
+
+            background:#0ea8bc;
+        }
+
+        .bottom-text{
+
+            margin-top:30px;
+
+            text-align:center;
+
+            font-size:18px;
+        }
+
+        .bottom-text a{
+
+            color:#15bfd4;
+
+            text-decoration:none;
+
+            font-weight:700;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container-box">
+
+        <!-- LEFT PANEL -->
+
+        <div class="left-panel">
+
+            <img
+                src="{{ url_for('static', filename='road_ai.png') }}"
+                class="left-image"
+            >
+
+        </div>
+
+        <!-- RIGHT PANEL -->
+
+        <div class="right-panel">
+
+            <div class="tabs">
+
+                <a href="/login" class="active">
+                    Login
+                </a>
+
+                <a href="/signup">
+                    Sign Up
+                </a>
+
+            </div>
+
+            <h1 class="welcome">
+                Welcome Back
+            </h1>
+
+            <p class="subtitle">
+                Login to continue to your dashboard
+            </p>
+
+            <form method="POST">
+
+                <input
+                    type="text"
+                    name="username"
+                    class="form-control"
+                    placeholder="Username"
+                    required
+                >
+
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Password"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+            <div class="bottom-text">
+
+                Don't have an account?
+
+                <a href="/signup">
+                    Create Account
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>

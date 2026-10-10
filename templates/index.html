@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PaveVision AI Dashboard</title>
+
+    <!-- Bootstrap -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+    <!-- Chart.js -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', sans-serif;
+        }
+
+        body{
+            background:#eef7fb;
+            overflow-x:hidden;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar{
+
+            position:fixed;
+
+            left:0;
+
+            top:0;
+
+            width:260px;
+
+            height:100vh;
+
+            background:linear-gradient(
+                180deg,
+                #0f172a,
+                #1e293b
+            );
+
+            color:white;
+
+            padding:30px 20px;
+        }
+
+        .logo{
+
+            font-size:28px;
+
+            font-weight:700;
+
+            margin-bottom:50px;
+
+            color:#4fd1c5;
+        }
+
+        .menu{
+            list-style:none;
+            padding:0;
+        }
+
+        .menu li{
+            margin-bottom:25px;
+        }
+
+        .menu a{
+
+            text-decoration:none;
+
+            color:#d1d5db;
+
+            font-size:18px;
+
+            display:flex;
+
+            align-items:center;
+
+            gap:12px;
+
+            padding:12px 15px;
+
+            border-radius:12px;
+
+            transition:0.3s;
+        }
+
+        .menu a:hover{
+
+            background:#334155;
+
+            color:white;
+        }
+
+        .active{
+
+            background:#14b8a6;
+
+            color:white !important;
+        }
+
+        /* MAIN CONTENT */
+
+        .main-content{
+
+            margin-left:260px;
+
+            padding:35px;
+        }
+
+        .topbar{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            margin-bottom:35px;
+        }
+
+        .dashboard-title h1{
+
+            font-size:40px;
+
+            font-weight:700;
+
+            color:#0f172a;
+        }
+
+        .dashboard-title p{
+
+            color:#64748b;
+
+            margin-top:5px;
+        }
+
+        .profile{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:20px;
+        }
+
+        .logout-btn{
+
+            background:#ef4444;
+
+            color:white;
+
+            padding:10px 18px;
+
+            border-radius:10px;
+
+            text-decoration:none;
+        }
+
+        /* CARDS */
+
+        .cards{
+
+            display:grid;
+
+            grid-template-columns:repeat(4,1fr);
+
+            gap:25px;
+
+            margin-bottom:35px;
+        }
+
+        .cards a{
+            text-decoration:none;
+            color:inherit;
+        }
+
+        .card-box{
+
+            background:white;
+
+            border-radius:20px;
+
+            padding:25px;
+
+            box-shadow:0 8px 20px rgba(0,0,0,0.08);
+
+            transition:0.3s;
+        }
+
+        .card-box:hover{
+
+            transform:translateY(-5px);
+
+            cursor:pointer;
+        }
+
+        .card-box h2{
+
+            font-size:36px;
+
+            font-weight:700;
+        }
+
+        .blue{
+            border-left:6px solid #3b82f6;
+        }
+
+        .green{
+            border-left:6px solid #10b981;
+        }
+
+        .orange{
+            border-left:6px solid #f59e0b;
+        }
+
+        .red{
+            border-left:6px solid #ef4444;
+        }
+
+        /* UPLOAD SECTION */
+
+        .upload-section{
+
+            background:white;
+
+            border-radius:20px;
+
+            padding:35px;
+
+            margin-bottom:35px;
+
+            box-shadow:0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .upload-box{
+
+            border:2px dashed #94a3b8;
+
+            border-radius:20px;
+
+            padding:50px;
+
+            text-align:center;
+        }
+
+        .upload-btn{
+
+            margin-top:20px;
+
+            background:#14b8a6;
+
+            color:white;
+
+            border:none;
+
+            padding:14px 28px;
+
+            border-radius:12px;
+        }
+
+        /* CHARTS */
+
+        .charts{
+
+            display:grid;
+
+            grid-template-columns:1fr 1fr;
+
+            gap:25px;
+
+            margin-top:30px;
+        }
+
+        .chart-card{
+
+            background:white;
+
+            padding:30px;
+
+            border-radius:20px;
+
+            box-shadow:0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        /* LIVE FEED */
+
+        .feed-container{
+
+            margin-top:35px;
+        }
+
+        .feed-card{
+
+            background:white;
+
+            border-left:6px solid #ef4444;
+
+            padding:20px;
+
+            border-radius:16px;
+
+            margin-bottom:20px;
+
+            box-shadow:0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .feed-card h5{
+
+            color:#ef4444;
+
+            font-weight:700;
+        }
+
+        .feed-card p{
+
+            margin:6px 0;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:1100px){
+
+            .cards{
+                grid-template-columns:1fr 1fr;
+            }
+
+            .charts{
+                grid-template-columns:1fr;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            🚧 PaveVision AI
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="/" class="active">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="/uploads">
+                    <i class="fa-solid fa-upload"></i>
+                    Uploads
+                </a>
+            </li>
+
+            <li>
+                <a href="/analytics">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Analytics
+                </a>
+            </li>
+
+            <li>
+                <a href="/gps">
+                    <i class="fa-solid fa-location-dot"></i>
+                    GPS Reports
+                </a>
+            </li>
+
+            <li>
+                <a href="/history">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Detection Logs
+                </a>
+            </li>
+
+            <li>
+                <a href="/live">
+                    <i class="fa-solid fa-video"></i>
+                    Live Monitoring
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+
+    <div class="main-content">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div class="dashboard-title">
+
+                <h1>
+                    AI Road Monitoring Dashboard
+                </h1>
+
+                <p>
+                    Smart pothole analytics & infrastructure monitoring
+                </p>
+
+            </div>
+
+            <div class="profile">
+
+                <span>
+                    👋 {{ username }}
+                </span>
+
+                <a href="/logout" class="logout-btn">
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- STATS -->
+
+        <div class="cards">
+
+            <!-- CRITICAL -->
+
+            <a href="/gps?severity=Severe">
+
+                <div class="card-box red">
+
+                    <h2>{{ severe_count }}</h2>
+
+                    <p>Critical Risk</p>
+
+                </div>
+
+            </a>
+
+            <!-- MEDIUM -->
+
+            <a href="/gps?severity=Medium">
+
+                <div class="card-box orange">
+
+                    <h2>{{ medium_count }}</h2>
+
+                    <p>Moderate Risk</p>
+
+                </div>
+
+            </a>
+
+            <!-- MINOR -->
+
+            <a href="/gps?severity=Minor">
+
+                <div class="card-box green">
+
+                    <h2>{{ minor_count }}</h2>
+
+                    <p>Minor Risk</p>
+
+                </div>
+
+            </a>
+
+            <!-- TOTAL -->
+
+            <a href="/gps">
+
+                <div class="card-box blue">
+
+                    <h2>{{ pothole_count }}</h2>
+
+                    <p>Total Potholes</p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+        <!-- UPLOAD -->
+
+        <div class="upload-section">
+
+            <h3>
+                Upload Image or Video
+            </h3>
+
+            <form
+                action="/upload"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                <div class="upload-box">
+
+                    <h4>
+                        Upload files for AI pothole analysis
+                    </h4>
+
+                    <input
+                        type="file"
+                        name="file"
+                        class="form-control mt-4"
+                        required
+                    >
+
+                    <button
+                        type="submit"
+                        class="upload-btn"
+                    >
+                        Analyze File
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- CHARTS -->
+
+        <div class="charts">
+
+            <div class="chart-card">
+
+                <h4>
+                    Severity Distribution
+                </h4>
+
+                <canvas id="severityChart"></canvas>
+
+            </div>
+
+            <div class="chart-card">
+
+                <h4>
+                    Severe Pothole Percentage
+                </h4>
+
+                <canvas id="riskChart"></canvas>
+
+            </div>
+
+        </div>
+
+        <!-- LIVE FEED -->
+
+        <div class="feed-container">
+
+            <h3>
+                🚨 Live Detection Feed
+            </h3>
+
+            {% for row in recent_detections %}
+
+            <div class="feed-card">
+
+                <h5>
+                    {{ row[0] }} pothole detected
+                </h5>
+
+                <p>
+                    📍 Latitude:
+                    {{ row[1] }}
+                </p>
+
+                <p>
+                    📍 Longitude:
+                    {{ row[2] }}
+                </p>
+
+                <p>
+                    🛠️ Status:
+                    {{ row[3] }}
+                </p>
+
+                <p>
+                    ⏰ Time:
+                    {{ row[4] }}
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- CHARTS -->
+
+    <script>
+
+        // PIE CHART
+
+        const severityCtx =
+            document.getElementById(
+                'severityChart'
+            );
+
+        new Chart(severityCtx, {
+
+            type: 'pie',
+
+            data: {
+
+                labels: [
+                    'Minor',
+                    'Medium',
+                    'Severe'
+                ],
+
+                datasets: [{
+
+                    data: [
+                        {{ minor_count }},
+                        {{ medium_count }},
+                        {{ severe_count }}
+                    ],
+
+                    backgroundColor: [
+                        '#10b981',
+                        '#f59e0b',
+                        '#ef4444'
+                    ]
+
+                }]
+            }
+        });
+
+        // DOUGHNUT CHART
+
+        const riskCtx =
+            document.getElementById(
+                'riskChart'
+            );
+
+        new Chart(riskCtx, {
+
+            type: 'doughnut',
+
+            data: {
+
+                labels: [
+                    'Severe',
+                    'Other'
+                ],
+
+                datasets: [{
+
+                    data: [
+                        {{ severe_count }},
+                        {{ pothole_count - severe_count }}
+                    ],
+
+                    backgroundColor: [
+                        '#ef4444',
+                        '#d1d5db'
+                    ]
+
+                }]
+            }
+        });
+
+    </script>
+
+</body>
+
